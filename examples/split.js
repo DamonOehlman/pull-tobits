@@ -7,3 +7,10 @@ pull(
   bits.split('\n'),
   pull.log()
 );
+
+// --> <Buffer 31>
+// --> <Buffer 32>
+// --> <Buffer 33>
+// --> <Buffer 34>
+// --> <Buffer 35>
+// --> <Buffer 36>
