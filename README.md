@@ -42,11 +42,13 @@ behaviour:
 
 ### split
 
-```js
+```
 split(delimiter)
 ```
 
-The following is a pretty contrived example, but demonstrates the idea:
+Split an incoming buffer into separate parts, and throw away the
+delimiters. The following is a pretty contrived example, but demonstrates
+the idea:
 
 ```js
 var bits = require('pull-tobits');

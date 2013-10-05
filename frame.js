@@ -33,4 +33,35 @@ var pull = require('pull-core');
 **/
 module.exports = pull.Through(function(read, opts) {
 
+  var queued = [];
+  var active;
+  var header = opts && opts.header;
+  var footer = opts && opts.footer;
+
+  // construct our matches object based on opts
+  var matches = {
+    header: header ? false : undefined,
+    footer: footer ? false : undefined
+  };
+
+  function next(end, cb) {
+    // on error, exit immediately
+    if (end instanceof Error) {
+      return cb(end);
+    }
+    // on normal end, see if we should pass on queued data
+    // which should only happen in the case of a header only search
+    else if (end) {
+      if (queued.length > 0 && header && (! footer)) {
+      }
+    }
+  }
+
+  return function(end, cb) {
+    if (end) {
+      return read(end, cb);
+    }
+
+    read(null, next);
+  }
 });
