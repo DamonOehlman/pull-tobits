@@ -32,7 +32,7 @@ console.log(input);
 
 pull(
   pull.once(input),
-  bits.split('\n'),
+  bits.split([0x0A]),  // bits.split('\n') is equivalent
   pull.log()
 );
 
