@@ -20,6 +20,20 @@ compressed file.
 split(delimiter)
 ```
 
+The following is a pretty contrived example, but demonstrates the idea:
+
+```js
+var bits = require('pull-tobits');
+var pull = require('pull-stream');
+var lines = [1, 2, 3, 4, 5, 6].join('\n');
+
+pull(
+  pull.values([new Buffer(lines)]),
+  bits.split('\n'),
+  pull.log()
+);
+```
+
 ## License(s)
 
 ### MIT

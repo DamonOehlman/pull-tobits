@@ -23,6 +23,10 @@ var pull = require('pull-core');
   ```js
   split(delimiter)
   ```
+  
+  The following is a pretty contrived example, but demonstrates the idea:
+
+  <<< examples/split.js
 **/
 exports.split = pull.Through(function(read, delimiter) {
   var queued = new Buffer(0);
