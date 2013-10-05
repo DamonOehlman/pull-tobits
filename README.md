@@ -25,10 +25,13 @@ The following is a pretty contrived example, but demonstrates the idea:
 ```js
 var bits = require('pull-tobits');
 var pull = require('pull-stream');
-var lines = [1, 2, 3, 4, 5, 6].join('\n');
+var input = new Buffer([1, 2, 3, 4, 5, 6].join('\n'));
+
+console.log(input);
+// --> <Buffer 31 0a 32 0a 33 0a 34 0a 35 0a 36>
 
 pull(
-  pull.values([new Buffer(lines)]),
+  pull.once(input),
   bits.split('\n'),
   pull.log()
 );
