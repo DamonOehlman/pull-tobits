@@ -1,0 +1,31 @@
+{
+  "name": "pull-tobits",
+  "version": "0.0.0",
+  "description": "pull-stream throughs for manipulating (splitting, etc) buffers",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/all.js",
+    "gendocs": "gendocs > README.md"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DamonOehlman/pull-tobits.git"
+  },
+  "keywords": [
+    "pull-stream",
+    "buffer"
+  ],
+  "author": "Damon Oehlman <damon.oehlman@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DamonOehlman/pull-tobits/issues"
+  },
+  "dependencies": {
+    "pull-core": "~1.0.0"
+  },
+  "devDependencies": {
+    "pull-stream": "~2.20.1",
+    "pull-file": "~0.3.1",
+    "tape": "~1.1.1"
+  }
+}
