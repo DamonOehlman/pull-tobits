@@ -2,6 +2,8 @@
 'use strict';
 
 var pull = require('pull-core');
+var bl = require('bl');
+var bs = require('bitsyntax');
 
 /**
   ### frame
@@ -33,28 +35,53 @@ var pull = require('pull-core');
 **/
 module.exports = pull.Through(function(read, opts) {
 
-  var queued = [];
+  var queued = bl();
+  var ci = 0;
   var active;
-  var header = opts && opts.header;
-  var footer = opts && opts.footer;
+  var header = opts && opts.header ? bs.compile(opts.header) : null;
+  var footer = opts && opts.footer ? bs.compile(opts.footer) : null;
 
-  // construct our matches object based on opts
-  var matches = {
-    header: header ? false : undefined,
-    footer: footer ? false : undefined
-  };
+  // initialise a header and footer match flag
+  var headerMatch = false;
+  var footerMatch = false;
 
-  function next(end, cb) {
-    // on error, exit immediately
-    if (end instanceof Error) {
-      return cb(end);
-    }
-    // on normal end, see if we should pass on queued data
-    // which should only happen in the case of a header only search
-    else if (end) {
-      if (queued.length > 0 && header && (! footer)) {
+  // if we have a header or footer, then calculate the byte lengths
+  var headerLen = header && calcByteLen(opts.header);
+  var footerLen = footer && calcByteLen(opts.footer);
+
+  function readNext(cb) {
+
+    function next(end, data) {
+      // on error, exit immediately
+      if (end instanceof Error) {
+        return cb(end);
+      }
+      // on normal end, see if we should pass on queued data
+      // which should only happen in the case of a header only search
+      else if (end) {
+        if (queued.length > 0 && header && (! footer)) {
+        }
+      }
+
+      // TODO: if the data is not a buffer, complain
+
+      // append the buffer to the queued list
+      queued.append(data);
+      console.log(queued.length);
+
+      // look across the entirety of the buffer for a match
+      if (header && (! headerMatch)) {
+        while ((! headerMatch) && ci + headerLen <= queued.length) {
+          console.log(queued.slice(ci, ci + headerLen));
+          headerMatch = header(queued.slice(ci, ci + headerLen));
+          ci += 1;
+        } 
+
+        console.log('header match = ', headerMatch);
       }
     }
+
+    read(null, next);
   }
 
   return function(end, cb) {
@@ -62,6 +89,13 @@ module.exports = pull.Through(function(read, opts) {
       return read(end, cb);
     }
 
-    read(null, next);
+    readNext(cb);
   }
 });
+
+
+function calcByteLen(expression) {
+  return bs.parse(expression).reduce(function(memo, part) {
+    return memo + (part.size / 8) | 0;
+  }, 0);
+}

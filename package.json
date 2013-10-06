@@ -21,7 +21,9 @@
     "url": "https://github.com/DamonOehlman/pull-tobits/issues"
   },
   "dependencies": {
-    "pull-core": "~1.0.0"
+    "pull-core": "~1.0.0",
+    "bitsyntax": "0.0.2",
+    "bl": "~0.4.2"
   },
   "devDependencies": {
     "pull-stream": "~2.20.1",
