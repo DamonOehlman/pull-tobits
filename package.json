@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DamonOehlman/pull-tobits.git"
+    "url": "https://bitbucket.org/DamonOehlman/pull-tobits.git"
   },
   "keywords": [
     "pull-stream",
@@ -18,7 +18,7 @@
   "author": "Damon Oehlman <damon.oehlman@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DamonOehlman/pull-tobits/issues"
+    "url": "https://bitbucket.org/DamonOehlman/pull-tobits/issues"
   },
   "dependencies": {
     "pull-core": "~1.0.0",
