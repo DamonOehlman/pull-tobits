@@ -10,7 +10,8 @@ compressed file.
 
 [![NPM](https://nodei.co/npm/pull-tobits.png)](https://nodei.co/npm/pull-tobits/)
 
-[![Build Status](https://travis-ci.org/DamonOehlman/pull-tobits.png?branch=master)](https://travis-ci.org/DamonOehlman/pull-tobits)
+[![Build Status](https://img.shields.io/travis/DamonOehlman/pull-tobits.svg?branch=master)](https://travis-ci.org/DamonOehlman/pull-tobits)
+![experimental](https://img.shields.io/badge/stability-experimental-red.svg)
 
 ## Reference
 
@@ -76,7 +77,7 @@ pull(
 
 ### MIT
 
-Copyright (c) 2013 Damon Oehlman <damon.oehlman@gmail.com>
+Copyright (c) 2014 Damon Oehlman <damon.oehlman@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
