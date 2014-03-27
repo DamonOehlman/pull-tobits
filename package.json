@@ -26,8 +26,8 @@
     "bl": "~0.4.2"
   },
   "devDependencies": {
-    "pull-stream": "~2.20.1",
-    "pull-file": "~0.3.1",
-    "tape": "~1.1.1"
+    "pull-stream": "^2.21.0",
+    "pull-file": "^0.4.1",
+    "tape": "^2.12.0"
   }
 }
