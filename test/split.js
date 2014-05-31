@@ -61,3 +61,14 @@ test('unicode', function(t) {
     })
   );
 });
+
+test('largefile split', function(t) {
+  t.plan(1);
+  pull(
+    file(path.resolve(__dirname, 'assets', 'AU.txt')),
+    bits.split([0x0A]),
+    pull.collect(function(err, values) {
+      console.log('got values: ', values[values.length - 1].toString());
+    })
+  );
+});
