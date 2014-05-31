@@ -2,6 +2,7 @@
 'use strict';
 
 var pull = require('pull-core');
+var BufferList = require('bl');
 
 /**
   ### split
@@ -17,7 +18,8 @@ var pull = require('pull-core');
   <<< examples/split.js
 **/
 module.exports = pull.Through(function(read, delimiter) {
-  var queued = new Buffer(0);
+  var bl = new BufferList();
+  var queued = [];
 
   // if we have been provided a string delimiter, convert to a buffer
   if (typeof delimiter == 'string' || (delimiter instanceof String)) {
@@ -28,72 +30,68 @@ module.exports = pull.Through(function(read, delimiter) {
     var match = true;
 
     for (var ii = delimiter.length; match && ii--; ) {
-      match = q[index + ii] === delimiter[ii]
+      match = bl.get(index + ii) === delimiter[ii]
     }
 
     return match;
   }
 
-  function nextChunk(cb) {
-    var foundChunk = false;
+  function splitAtChunks() {
+    var out = [];
 
-    // create a proxy callback to monitor sending data through to the sink
-    function sendChunk(end, data) {
-      foundChunk = true;
-      cb(end, data);
+    // iterate through the data looking for a match
+    for (var ii = 0, count = bl.length; ii < count; ii++) {
+      if (bl.get(ii) === delimiter[0] && (delimiter.length === 1 || checkMatch(ii))) {
+        out.push(bl.slice(0, ii));
+        bl.consume(ii + delimiter.length);
 
-      // no longer need the monitor, so remap
-      sendChunk = cb;
+        return out.concat(splitAtChunks());
+      }
     }
 
+    return out;
+  }
+
+  // no delimiter? do nothing
+  if (! delimiter) {
+    return read;
+  }
+
+  return function(abort, cb) {
     function next(end, data) {
+      var last;
+
       if (end) {
-        // if we have data queued and end is not an error, then pass
-        // the remaining along
-        if (queued && queued.length > 0 && (! (end instanceof Error))) {
-          cb(false, queued);
-          queued = null;
+        if (bl.length > 0) {
+          last = bl.slice(0);
+          bl = new BufferList();
+
+          return cb(null, last);
         }
 
-        return cb(end);
+        return cb(end, data);
       }
 
-      // update queued after splitting
-      queued = splitAtChunks(
-        Buffer.concat([queued, data], queued.length + data.length),
-        sendChunk
-      );
+      bl.append(data);
+      queued = queued.concat(splitAtChunks());
 
-      // if we didn't find a delimiter, go again with a read
-      if (! foundChunk) {
-        read(null, next);
+      // if we have queued data return that
+      if (queued.length > 0) {
+        return cb(null, queued.shift());
       }
+
+      read(null, next);
     }
 
-    // read the next chunk
-    read(null, next);
-  }
-
-  function splitAtChunks(q, cb) {
-    // iterate through the data looking for a match
-    for (var ii = 0, count = q.length; ii < count; ii++) {
-      if (q[ii] === delimiter[0] && (delimiter.length === 1 || checkMatch(q, ii))) {
-        // send the data to the callback
-        cb(null, q.slice(0, ii));
-
-        // update queued to the delimiter after the delimiter
-        return splitAtChunks(q.slice(ii + delimiter.length), cb);
-      }
+    if (abort) {
+      return cb(abort);
     }
 
-    return q;
-  }
-
-  return function(end, cb) {
-    if (end) {
-      return read(end, cb);
+    // if we have queued data, then return a queued chunk
+    if (queued.length > 0) {
+      return cb(null, queued.shift());
     }
 
-    nextChunk(cb);
+    read(abort, next);
   };
 });
