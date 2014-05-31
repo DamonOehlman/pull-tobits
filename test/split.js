@@ -68,7 +68,7 @@ test('largefile split', function(t) {
     file(path.resolve(__dirname, 'assets', 'AU.txt')),
     bits.split([0x0A]),
     pull.collect(function(err, values) {
-      console.log('got values: ', values[values.length - 1].toString());
+      t.equal(values.length, 105367, 'got expected count');
     })
   );
 });
