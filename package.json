@@ -1,6 +1,6 @@
 {
   "name": "pull-tobits",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "pull-stream throughs for manipulating (splitting, etc) buffers",
   "main": "index.js",
   "scripts": {
