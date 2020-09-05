@@ -23,7 +23,7 @@
   "dependencies": {
     "pull-core": "^1",
     "bitsyntax": "0.0.4",
-    "bl": "~0.8"
+    "bl": "~1.2.3"
   },
   "devDependencies": {
     "pull-stream": "^2",
